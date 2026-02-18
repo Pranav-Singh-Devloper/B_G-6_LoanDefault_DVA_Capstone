@@ -1,4 +1,4 @@
-📊 Loan Default Risk Analytics
+Loan Default Risk Analytics
 Predicting Loan Default Risk: A Data-Driven Credit Risk Analysis Framework
 
 Sector: Banking / Financial Risk Analytics
@@ -6,96 +6,65 @@ Institute: Newton School of Technology, Rishihood University
 Dataset Size: 10,000 Loans
 Tool Used: Google Sheets
 
-📌 Project Overview
+Project Overview
 
-Financial institutions face significant losses due to loan defaults. Traditional evaluation methods rely heavily on static indicators such as credit score and income, often missing deeper risk interactions between leverage (LTV), affordability stress (DTI), and loan categories.
+Financial institutions face significant losses due to loan defaults. Traditional evaluation methods rely heavily on static indicators such as credit score and income, often failing to capture risk interactions between leverage (LTV), affordability stress (DTI), and loan categories.
 
-This project builds a structured KPI-driven dashboard to:
+This project builds a KPI-driven analytical dashboard to:
 
 Identify high-risk borrower segments
 
-Quantify financial exposure due to defaults
+Quantify financial exposure
 
-Segment risk using LTV & DTI thresholds
+Define structural LTV and DTI thresholds
 
-Provide a centralized “Risk Control Tower” dashboard
+Support data-driven credit decisioning
 
-🎯 Core Objective
+Objective
 
-Which borrower financial characteristics most significantly influence loan default risk, and how can lenders reduce exposure using data-driven segmentation?
+Which borrower financial characteristics most significantly influence loan default risk, and how can lenders reduce exposure using structured segmentation?
 
-📂 Dataset Analysis Source
+Dataset Source
 
-Dataset sourced from Kaggle:
-
-Loan Default Dataset
+Loan Default Dataset (Kaggle)
 https://www.kaggle.com/datasets/yasserh/loan-default-dataset
 
 Full project report reference: 
 
 135bbde0-6343-40c9-964e-03dc88b…
 
-📖 SECTION A: DATA DICTIONARY
+SECTION A: DATA DICTIONARY
 Original Column	New Column Name	Data Type	Description	Used in Analysis?	Notes
-ID	id	Numeric (ID)	Unique loan identifier	No	Primary key; no analytical value
-year	year	Numeric	Year of issuance	No	Only 2019; no variation
-loan_limit	loan_limit	Categorical	Regulatory loan classification	No	No meaningful separation
-Gender	gender	Categorical	Applicant gender	No	Excluded to avoid bias
-approve_in_adv	approved_in_advance	Categorical	Pre-approved flag	No	No significant structural effect
-loan_type	loan_type	Categorical	Loan product type	Yes	Variation tested
-loan_purpose	loan_purpose	Categorical	Loan purpose	No	Not structurally significant
-Credit_Worthiness	credit_worthiness	Categorical	Internal classification	No	Weak separation
-open_credit	open_credit	Categorical	Existing credit accounts	No	No strong pattern
+ID	id	Numeric	Unique loan identifier	No	Primary key
+year	year	Numeric	Year of issuance	No	Only 2019
+loan_type	loan_type	Categorical	Loan product type	Yes	Segment comparison
 business_or_commercial	loan_category	Categorical	Business vs Personal	Yes	Business risk higher
-loan_amount	loan_amount	Numeric	Sanctioned amount	Yes (Secondary)	Weaker than LTV
-rate_of_interest	rate_of_interest	Numeric	Interest rate (%)	Yes (Primary)	Activation band 3.5–4.0%
-Interest_rate_spread	interest_rate_spread	Numeric	Spread over benchmark	No	Not analyzed separately
-Upfront_charges	upfront_charges	Numeric	Initial fees	No	No direct test
-term	loan_term	Numeric	Loan tenure	Tested	82% = 360 months
-Neg_ammortization	negative_amortization	Categorical	Negative amortization flag	No	Low variation
-interest_only	interest_only	Categorical	Interest-only flag	No	Not analyzed
-lump_sum_payment	lump_sum_payment	Categorical	Lump sum clause	No	Not analyzed
-property_value	property_value	Numeric	Property valuation	Indirect	Used in LTV
-construction_type	construction_type	Categorical	Construction category	No	Not significant
-occupancy_type	occupancy_type	Categorical	Occupancy class	No	Not analyzed
-Secured_by	secured_by	Categorical	Collateral type	No	Not primary driver
-total_units	total_units	Numeric	Number of units	No	Minimal variation
-income	annual_income	Numeric	Annual income	Yes	Weak structural effect
-credit_type	credit_type	Categorical	Credit agency type	No	Not significant
-Credit_Score	credit_score	Numeric	Borrower credit score	Tested	Weak predictor
-co-applicant_credit_type	co_applicant_credit_type	Categorical	Co-applicant source	No	Not significant
-age	age	Categorical	Age group	No	Not analyzed
-submission_of_application	submission_type	Categorical	Submission mode	No	No impact
-LTV	loan_to_value_ratio	Numeric	Loan/Property ratio	Yes (Primary)	Strong severity amplifier
-Region	region	Categorical	Geographic region	No	Not analyzed
-Security_Type	security_type	Categorical	Security instrument	No	Not significant
-Status	is_loan_default	Binary	Target variable	Yes	Overall default 24.88%
-dtir1	debt_to_income_ratio	Numeric	Debt-to-income %	Yes (Secondary)	DTI ≥50 high risk
-🧹 SECTION B: CLEANING & TRANSFORMATION LOG
-Step	Column	Issue	Action Taken
-1	loan_limit	Encoded values	Replaced with readable labels; blanks → Mode
-2	approved_in_adv	Encoded values	Standardized; blanks → Mode
-3	open_credit	Encoded values	Converted to Yes/No
-4	loan_category	Encoded	Standardized Business/Personal
-5	negative_amortization	Encoded	Converted to Yes/No
-6	interest_only	Encoded	Converted to Yes/No
-7	lump_sum_payment	Encoded	Converted to Yes/No
-8	construction_type	Encoded	Replaced with readable categories
-9	occupancy_type	Encoded	Standardized labels
-10	submission_type	Encoded	Converted to Direct/Institution
-11	total_units	Text values	Converted to numeric 1–4
-12	loan_purpose_type	Missing	Mode imputation
-13	loan_term	Missing	Mode (360 months)
-14	amortization_type	Missing	Mode
-15	age_group	Missing	Mode
-16	upfront_fee	Skewed	Median imputation
-17	property_value	Skewed	Median
-18	interest_rate	Missing	Grouped Median
-19	interest_rate_spread	Missing	Grouped Median
-20	annual_income	Missing	Grouped Median
-21	debt_to_income_ratio	Missing	Income-group based Median
-📊 Key Insights & Statistics
-📌 Portfolio Metrics
+loan_amount	loan_amount	Numeric	Sanctioned principal	Yes (Secondary)	Moderate impact
+rate_of_interest	rate_of_interest	Numeric	Interest rate (%)	Yes (Primary)	Activation band identified
+loan_term	loan_term	Numeric	Loan tenure	Tested	Majority at 360 months
+annual_income	annual_income	Numeric	Borrower income	Tested	Weak structural effect
+Credit_Score	credit_score	Numeric	Credit score	Tested	Weak predictor
+LTV	loan_to_value_ratio	Numeric	Loan / Property value	Yes (Primary)	Strong severity driver
+dtir1	debt_to_income_ratio	Numeric	Debt-to-income ratio	Yes (Secondary)	DTI ≥ 50 high risk
+Status	is_loan_default	Binary	Target variable	Yes	Default rate 24.88%
+
+(Non-analytical columns removed for brevity.)
+
+SECTION B: DATA CLEANING SUMMARY
+Category	Action Taken
+Encoded Categorical Values	Replaced codes with readable labels (e.g., cf → Conforming, b/c → Business)
+Binary Indicators	Standardized to Yes/No format
+Text-Based Numerics	Converted to numeric format (e.g., total units 1U–4U → 1–4)
+Missing Categorical Values	Filled using Mode
+Skewed Numeric Features	Median imputation
+Interest Rate & Income	Grouped median imputation
+DTI	Income-based grouped median
+
+All transformations were performed in Google Sheets using IF(), MODE(), MEDIAN(), and FILTER() logic.
+
+Key Insights & Statistics
+
+Portfolio Metrics:
 
 Total Loans: 10,000
 
@@ -109,39 +78,41 @@ Avg Credit Score (Defaulted): 699.51
 
 Avg Credit Score (Non-Defaulted): 702.03
 
-🔎 Major Risk Findings
-1️⃣ DTI is the Strongest Predictor
+Risk Drivers
+
+Debt-to-Income Ratio
 
 DTI 50–59% → 42.40% default rate
 
-Represents borrower affordability breaking point
+Strongest predictor of default
 
-2️⃣ LTV Amplifies Severity
+Loan-to-Value Ratio
 
-Default stable below 0.75
+Stable below 0.75
 
-Sharp spike near 1.0 LTV
+Sharp increase near 1.0 LTV
 
-3️⃣ Business Loans Underperform
+Loan Category
 
-Business: 33.03%
+Business: 33.03% default
 
 Personal: 23.55%
 
-4️⃣ Credit Score Weak Predictor
+Credit Score
 
-Only 2.52 point gap between defaulted vs non-defaulted
+Only 2.52-point difference
 
-5️⃣ Portfolio Concentration Risk
+Weak standalone predictor
 
-Conventional Loans: 76.5%
+Portfolio Concentration
 
-Government: 14.1%
+Conventional loans: 76.5%
 
-Special: 9.4%
+Creates systemic exposure risk
 
-📈 Dashboard Summary
-🔝 KPI Cards
+Dashboard Summary
+
+Top Section – KPI Cards
 
 Total Loans
 
@@ -151,49 +122,49 @@ Median Interest Rate
 
 Total Financial Loss
 
-📊 Risk Drivers
+Middle Section – Risk Drivers
 
-Default by LTV Band (Line Chart)
+Default by LTV Band
 
-Default by DTI Band (Bar Chart)
+Default by DTI Band
 
 Loan Category Comparison
 
-Loan Type Distribution (Donut)
+Loan Type Distribution
 
-📉 Drilldowns
+Bottom Section – Drilldowns
 
-LTV × Loan Type
+LTV by Loan Type
 
-DTI × Loan Type
+DTI by Loan Type
 
-Business vs Personal split
+Business vs Personal Comparison
 
-📷 Dataset Analysis Screenshots
-Dashboard Overview
+Dataset Analysis Screenshot
 
-(Add exported dashboard image in repository as dashboard.png)
+Add exported dashboard image to repository:
 
-💡 Risk Segmentation Framework
-Segment A — Critical Risk
+Risk Segmentation Framework
+
+Critical Risk
 
 DTI > 50%
 
 LTV > 0.75
 
-Segment B — Moderate Risk
+Moderate Risk
 
 DTI 30–49%
 
 Medium LTV
 
-Segment C — Low Risk
+Low Risk
 
 DTI < 30%
 
 LTV < 0.5
 
-💰 Financial Impact Estimation
+Impact Estimation
 
 Reducing high-DTI exposure by 30% could:
 
@@ -201,36 +172,31 @@ Reduce default exposure by 10–15%
 
 Save approximately 8–12 million
 
-⚠️ Limitations
+Limitations
 
-Single-year dataset (2019)
+Single-year dataset
 
 No macroeconomic variables
 
-No employment/industry variables
+No employment variables
 
-Correlation ≠ Causation
+Correlation does not imply causation
 
-🚀 Future Scope
+Future Scope
 
-Logistic Regression Modeling
+Logistic Regression
 
-Probability of Default (PD) Framework
+Probability of Default framework
 
-Machine Learning Credit Scoring
+Machine Learning scoring
 
-Early Warning Delinquency System
+Early warning system
 
-🏁 Conclusion
+Conclusion
 
-This project demonstrates:
+Debt burden (DTI) is the strongest predictor of default.
+Leverage (LTV) amplifies risk severity.
+Business loans carry structural risk.
+Credit score alone is insufficient for accurate risk assessment.
 
-Debt burden (DTI) is the strongest predictor
-
-Leverage (LTV) amplifies risk
-
-Portfolio concentration increases systemic exposure
-
-Static credit score-based evaluation is insufficient
-
-Moving toward dynamic segmentation-based underwriting can significantly reduce default losses and improve portfolio health.
+A segmentation-based underwriting approach can significantly improve portfolio health and reduce financial loss.
