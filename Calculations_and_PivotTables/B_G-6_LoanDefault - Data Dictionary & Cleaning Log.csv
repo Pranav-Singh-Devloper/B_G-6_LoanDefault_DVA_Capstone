@@ -1,0 +1,61 @@
+SECTION A: DATA DICTIONARY,,,,,
+Original Column,New Column Name,Data Type,Description,Used in Analysis?,Notes
+ID,id,Numeric (ID),Unique loan identifier,No,Primary key; no analytical value
+year,year,Numeric,Year of loan issuance,No,Only one year observed (2019); no variation
+loan_limit,loan_limit,Categorical,Regulatory loan classification,No,No meaningful separation in default
+Gender,gender,Categorical,Applicant gender,No,Excluded to avoid bias; not tested
+approve_in_adv,approved_in_advance,Categorical,Whether loan was pre-approved,No,No significant structural effect
+loan_type,loan_type,Categorical,Type of loan product,Yes,Tested for variation; not a primary driver
+loan_purpose,loan_purpose,Categorical,Purpose of loan,No,Not structurally significant
+Credit_Worthiness,credit_worthiness,Categorical,Internal credit classification,No,Weak separation in default
+open_credit,open_credit,Categorical,Existing credit accounts indicator,No,No strong pattern observed
+business_or_commercial,loan_category,Categorical,Business/commercial vs personal loan,Yes,Tested for variation; not a dominant driver
+loan_amount,loan_amount,Numeric,Total loan amount sanctioned,Yes (Secondary),Moderate variation inside activation band; weaker than LTV
+rate_of_interest,rate_of_interest,Numeric,Interest rate (%),Yes (Primary),Structural activation band identified (3.5–4.0%)
+Interest_rate_spread,interest_rate_spread,Numeric,Spread over benchmark rate,No,Not analyzed separately
+Upfront_charges,upfront_charges,Numeric,Initial charges/fees,No,No direct relation to default tested
+term,loan_term,Numeric,Loan tenure in months,Tested,82% loans at 360 months; weak explanatory power
+Neg_ammortization,negative_amortization,Categorical,Negative amortization flag,No,Not analyzed; low structural variation
+interest_only,interest_only,Categorical,Interest-only payment flag,No,Not analyzed
+lump_sum_payment,lump_sum_payment,Categorical,Lump sum clause,No,Not analyzed
+property_value,property_value,Numeric,Assessed property value,Indirect,Used indirectly via LTV calculation
+construction_type,construction_type,Categorical,Property construction type,No,Not significant
+occupancy_type,occupancy_type,Categorical,Occupancy classification,No,Not analyzed
+Secured_by,secured_by,Categorical,Type of collateral,No,Not primary driver
+total_units,total_units,Numeric,Number of housing units,No,Minimal variation
+income,annual_income,Numeric,Borrower annual income,Yes,Tested inside activation band; weak structural effect
+credit_type,credit_type,Categorical,Credit reporting agency type,No,Not significant
+Credit_Score,credit_score,Numeric,Borrower credit score,Tested,Flat default distribution (~24–26%); weak predictor
+co-applicant_credit_type,co_applicant_credit_type,Categorical,Co-applicant credit source,No,Not significant
+age,age,Categorical,Borrower age group,No,Not analyzed
+submission_of_application,submission_type,Categorical,Application submission mode,No,No impact observed
+LTV,loan_to_value_ratio,Numeric,Loan / property value ratio,Yes (Primary),Strong severity amplifier; >100% LTV shows ~97% default inside activation band
+Region,region,Categorical,Geographic region,No,Not analyzed
+Security_Type,security_type,Categorical,Type of security instrument,No,Not significant
+Status,is_loan_default,Binary,Target variable (1=Default),Yes,Dependent variable; overall default rate 24.88%
+dtir1,debt_to_income_ratio,Numeric,Debt-to-income ratio (%),Yes (Secondary),DTI ≥50 significantly increases default within activation band
+,,,,,
+,,,,,
+SECTION B — CLEANING & TRANSFORMATION LOG,,,,,
+Step,Column Name,Original Issue / Error,Action Taken & Formula Used,,
+1,loan_limit,"Encoded categorical values (cf, ncf) and blanks","Replaced with business-friendly labels (Conforming, Non-Conforming). Blank values filled using Mode: =IF(A2="""", Mode_Value, A2)",,
+2,approved_in_adv,"Encoded values (pre, nopre) and blanks",Standardized to Pre-Approved / Not Pre-Approved. Blanks filled using Mode,,
+3,open_credit,"Encoded values (opc, nopc)",Replaced with Yes / No using IF() logic,,
+4,loan_category,"Encoded values (b/c, nob/c)",Standardized to Business / Personal,,
+5,negative_amortization,"Encoded values (not_neg, neg_amm)",Replaced with No / Yes,,
+6,interest_only,"Encoded values (int_only, not_int)",Replaced with Yes / No,,
+7,lump_sum_payment,"Encoded values (lpsm, not_lpsm)",Replaced with Yes / No,,
+8,construction_type,"Encoded values (mh, sb)",Replaced with Manufactured Home / Site Built,,
+9,occupancy_type,"Encoded values (ir, pr, sr)",Replaced with Investment / Primary Residence / Secondary Residence,,
+10,submission_of_application,"Encoded values (not_inst, to_inst)",Replaced with Direct / Through Institution,,
+11,total_units,Stored as text (1U–4U),Converted to numeric 1–4 using text replacement,,
+12,loan_purpose_type,Missing categorical values,Filled blanks using Mode (most frequent category),,
+13,loan_term,Missing numeric values,"Filled blanks using Mode (most common term, typically 360)",,
+14,amortization_type,Missing categorical values,Filled blanks using Mode,,
+15,age_group,Missing categorical values,Filled blanks using Mode,,
+16,upfront_fee,"Missing numeric values, skewed distribution",Filled blanks using Median: =MEDIAN(range),,
+17,property_value,"Missing numeric values, skewed distribution",Filled blanks using Median,,
+18,interest_rate,"Missing numeric values, skewed financial feature","Filled blanks using Grouped Median: =MEDIAN(FILTER(range, group_condition)) grouped by loan_category / credit_grade",,
+19,interest_rate_spread,Missing numeric values,Filled blanks using same Grouped Median approach as interest_rate,,
+20,annual_income,Missing numeric values,Filled blanks using Grouped Median grouped by region / loan_category,,
+21,debt_to_income_ratio,Missing numeric values,"Created income_group and applied Grouped Median: =MEDIAN(FILTER(DTIR_range, income_group_condition))",,
